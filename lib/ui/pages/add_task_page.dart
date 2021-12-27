@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:task_manager/controllers/task_controller.dart';
+import 'package:task_manager/models/task.dart';
 import 'package:task_manager/ui/theme.dart';
 import 'package:task_manager/ui/widgets/button.dart';
 import 'package:task_manager/ui/widgets/input_field.dart';
@@ -20,9 +21,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
   final TextEditingController? _noteController = TextEditingController();
 
   DateTime _selectedDate = DateTime.now();
-  final String _startTime =
-      DateFormat('hh:mm a').format(DateTime.now()).toString();
-  final String _endTime = DateFormat('hh:mm a')
+  String _startTime = DateFormat('hh:mm a').format(DateTime.now()).toString();
+  String _endTime = DateFormat('hh:mm a')
       .format(DateTime.now().add(const Duration(minutes: 10)))
       .toString();
 
@@ -52,13 +52,15 @@ class _AddTaskPageState extends State<AddTaskPage> {
               InputField(
                 title: 'Note',
                 hint: 'Entre Note here',
-                controller: _titleController,
+                controller: _noteController,
               ),
               InputField(
                 title: 'Date',
                 hint: DateFormat.yMd().format(_selectedDate),
                 widget: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _getDateFromUser();
+                  },
                   icon: const Icon(
                     Icons.calendar_today_outlined,
                     color: Colors.grey,
@@ -68,28 +70,42 @@ class _AddTaskPageState extends State<AddTaskPage> {
               Row(
                 children: [
                   Expanded(
-                    child: InputField(
-                      title: 'Start Time',
-                      hint: _startTime,
-                      widget: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.access_time_rounded,
-                          color: Colors.grey,
+                    child: GestureDetector(
+                      onTap: () {
+                        getTimeFormUser(isStartedTime: true);
+                      },
+                      child: InputField(
+                        title: 'Start Time',
+                        hint: _startTime,
+                        widget: IconButton(
+                          onPressed: () {
+                            getTimeFormUser(isStartedTime: true);
+                          },
+                          icon: const Icon(
+                            Icons.access_time_rounded,
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(width: 17),
                   Expanded(
-                    child: InputField(
-                      title: 'End Time',
-                      hint: _endTime,
-                      widget: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.access_time_rounded,
-                          color: Colors.grey,
+                    child: GestureDetector(
+                      onTap: () {
+                        getTimeFormUser(isStartedTime: false);
+                      },
+                      child: InputField(
+                        title: 'End Time',
+                        hint: _endTime,
+                        widget: IconButton(
+                          onPressed: () {
+                            getTimeFormUser(isStartedTime: false);
+                          },
+                          icon: const Icon(
+                            Icons.access_time_rounded,
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
                     ),
@@ -142,7 +158,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 const Spacer(),
                 MyButton(
                   label: 'Create Task',
-                  onTap: () {},
+                  onTap: () async {
+                    _validateDate();
+                  },
                 ),
               ]),
               const SizedBox(height: 20),
@@ -153,6 +171,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 
+  // Appbar Widget burası
   _appBar() {
     return AppBar(
       leading: IconButton(
@@ -177,6 +196,42 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 
+  _validateDate() {
+    if (_titleController!.text.isNotEmpty && _noteController!.text.isNotEmpty) {
+      _addTasksToDb();
+      Get.back();
+    } else if (_titleController!.text.isEmpty ||
+        _noteController!.text.isEmpty) {
+      Get.snackbar('Required', 'All field are required!',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.white,
+          colorText: pinkClr,
+          icon: const Icon(
+            Icons.warning_amber_rounded,
+            color: Colors.red,
+          ));
+    } else {
+      return print('###### SOMETHING WRONG #######');
+    }
+  }
+
+  _addTasksToDb() async {
+    int value = await _taskController.addTask(
+        task: Task(
+      title: _titleController!.text,
+      note: _noteController!.text,
+      isCompleted: 0,
+      date: DateFormat.yMd().format(_selectedDate),
+      startTime: _startTime,
+      endTime: _endTime,
+      color: _seleectedColor,
+      remind: _selectedRemind,
+      repeat: _selectedRepeat,
+    ));
+    print('$value');
+  }
+
+  // Color i seçmek için
   Column _colorPalette() {
     return Column(
       children: [
@@ -212,5 +267,43 @@ class _AddTaskPageState extends State<AddTaskPage> {
         )
       ],
     );
+  }
+
+  _getDateFromUser() async {
+    DateTime? _pickedDate = await showDatePicker(
+        context: context,
+        initialDate: _selectedDate,
+        firstDate: DateTime(2019),
+        lastDate: DateTime(2030));
+
+    if (_pickedDate != null)
+      setState(() {
+        _selectedDate = _pickedDate;
+      });
+    else {
+      print('Time cancled or something wrong');
+    }
+  }
+
+  getTimeFormUser({required bool isStartedTime}) async {
+    TimeOfDay? _pickedTime = await showTimePicker(
+        context: context,
+        initialTime: isStartedTime
+            ? TimeOfDay.fromDateTime(DateTime.now())
+            : TimeOfDay.fromDateTime(
+                DateTime.now().add(const Duration(minutes: 15))));
+    String _formattedTime = _pickedTime!.format(context);
+
+    if (isStartedTime) {
+      setState(() {
+        _startTime = _formattedTime;
+      });
+    } else if (!isStartedTime) {
+      setState(() {
+        _endTime = _formattedTime;
+      });
+    } else {
+      print('Time cancled or something wrong');
+    }
   }
 }

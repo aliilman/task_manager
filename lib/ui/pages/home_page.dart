@@ -33,6 +33,7 @@ class _HomePageState extends State<HomePage> {
     notifyHelper = NotifyHelper();
     notifyHelper.requestIOSPermissions();
     notifyHelper.initializeNotification();
+    _taskController.getTasks();
   }
 
   bool isClose = false;
@@ -126,62 +127,44 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<void> _onRefresh() async {
+    _taskController.getTasks();
+  }
+
   _showTasks() {
-    return Expanded(
-      child: ListView.builder(
-          shrinkWrap: true,
-          scrollDirection: SizeConfig.orientation == Orientation.landscape
-              ? Axis.horizontal
-              : Axis.vertical,
-          itemCount: _taskController.taskList.length,
-          itemBuilder: (BuildContext context, int index) {
-            var task = _taskController.taskList[index];
-            return AnimationConfiguration.staggeredList(
-              position: index,
-              duration: const Duration(milliseconds: 2000),
-              child: SlideAnimation(
-                horizontalOffset: 300,
-                child: FadeInAnimation(
-                  child: GestureDetector(
-                    onTap: () {
-                      _showBottomSheet(context, task);
-                    },
-                    child: TaskTile(task),
+    return Expanded(child: Obx(() {
+      if (_taskController.tasksList.isEmpty) {
+        return _noTaskMsg();
+      } else {
+        return RefreshIndicator(
+          onRefresh: _onRefresh,
+          child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: SizeConfig.orientation == Orientation.landscape
+                  ? Axis.horizontal
+                  : Axis.vertical,
+              itemCount: _taskController.tasksList.length,
+              itemBuilder: (BuildContext context, int index) {
+                var task = _taskController.tasksList[index];
+                return AnimationConfiguration.staggeredList(
+                  position: index,
+                  duration: const Duration(milliseconds: 2000),
+                  child: SlideAnimation(
+                    horizontalOffset: 300,
+                    child: FadeInAnimation(
+                      child: GestureDetector(
+                        onTap: () {
+                          _showBottomSheet(context, task);
+                        },
+                        child: TaskTile(task),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            );
-          }
-
-          //Expanded(
-          //     child: GestureDetector(
-          //   onTap: () {
-          //     _showBottomSheet(
-          //       context,
-          //       Task(
-          //           title: 'Gürev 1',
-          //           note: 'Note something',
-          //           isCompleted: 0,
-          //           startTime: '8:19',
-          //           endTime: '4:34',
-          //           color: 2),
-          //     );
-          //   },
-          //   child: TaskTile(
-          //     Task(
-          //         title: 'Gürev 1',
-          //         note: 'Note something',
-          //         isCompleted: 1,
-          //         startTime: '8:19',
-          //         endTime: '4:34',
-          //         color: 2),
-          //   ),
-          // )
-
-          // _noTaskMsg()
-
-          ),
-    );
+                );
+              }),
+        );
+      }
+    }));
   }
 
   _noTaskMsg() {
@@ -189,34 +172,37 @@ class _HomePageState extends State<HomePage> {
       children: [
         AnimatedPositioned(
           duration: const Duration(milliseconds: 2000),
-          child: SingleChildScrollView(
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              direction: SizeConfig.orientation == Orientation.landscape
-                  ? Axis.horizontal
-                  : Axis.vertical,
-              children: [
-                SizeConfig.orientation == Orientation.landscape
-                    ? const SizedBox(height: 6)
-                    : const SizedBox(height: 200),
-                SvgPicture.asset('images/task.svg',
-                    color: primaryClr.withOpacity(0.5),
-                    height: 90,
-                    semanticsLabel: 'task'),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-                  child: Text(
-                    'You do not have any task yet!\nAdd new new tasks to make your days productive',
-                    style: subTitleStyle,
-                    textAlign: TextAlign.center,
+          child: RefreshIndicator(
+            onRefresh: _onRefresh,
+            child: SingleChildScrollView(
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                direction: SizeConfig.orientation == Orientation.landscape
+                    ? Axis.horizontal
+                    : Axis.vertical,
+                children: [
+                  SizeConfig.orientation == Orientation.landscape
+                      ? const SizedBox(height: 6)
+                      : const SizedBox(height: 200),
+                  SvgPicture.asset('images/task.svg',
+                      color: primaryClr.withOpacity(0.5),
+                      height: 90,
+                      semanticsLabel: 'task'),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                    child: Text(
+                      'You do not have any task yet!\nAdd new new tasks to make your days productive',
+                      style: subTitleStyle,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                ),
-                SizeConfig.orientation == Orientation.landscape
-                    ? const SizedBox(height: 120)
-                    : const SizedBox(height: 180),
-              ],
+                  SizeConfig.orientation == Orientation.landscape
+                      ? const SizedBox(height: 120)
+                      : const SizedBox(height: 180),
+                ],
+              ),
             ),
           ),
         )
