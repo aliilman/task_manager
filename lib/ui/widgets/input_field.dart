@@ -11,6 +11,7 @@ class InputField extends StatelessWidget {
       required this.title,
       required this.hint,
       this.controller,
+      this.onTap,
       this.widget})
       : super(key: key);
 
@@ -18,6 +19,7 @@ class InputField extends StatelessWidget {
   final String hint;
   final TextEditingController? controller;
   final Widget? widget;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +47,7 @@ class InputField extends StatelessWidget {
               children: [
                 Expanded(
                     child: TextFormField(
+                  onTap: onTap,
                   controller: controller,
                   readOnly: widget != null ? true : false,
                   style: subHeadingStyle,

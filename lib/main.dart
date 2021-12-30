@@ -11,6 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DBHelper.initDB();
   await GetStorage.init();
+
   runApp(const MyApp());
 }
 

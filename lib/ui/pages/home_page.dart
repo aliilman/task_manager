@@ -146,21 +146,48 @@ class _HomePageState extends State<HomePage> {
               itemCount: _taskController.tasksList.length,
               itemBuilder: (BuildContext context, int index) {
                 var task = _taskController.tasksList[index];
-                return AnimationConfiguration.staggeredList(
-                  position: index,
-                  duration: const Duration(milliseconds: 2000),
-                  child: SlideAnimation(
-                    horizontalOffset: 300,
-                    child: FadeInAnimation(
-                      child: GestureDetector(
-                        onTap: () {
-                          _showBottomSheet(context, task);
-                        },
-                        child: TaskTile(task),
+
+                if (task.repeat == 'Daily' ||
+                    task.date == DateFormat.yMd().format(_selectedDate) ||
+                    (task.repeat == 'Weekly' &&
+                        _selectedDate
+                                    .difference(
+                                        DateFormat.yMd().parse(task.date!))
+                                    .inDays %
+                                7 ==
+                            0) ||
+                    (task.repeat == 'Monthly' &&
+                        DateFormat.yMd().parse(task.date!).day ==
+                            _selectedDate.day)) {
+                  var hour = task.startTime.toString().split(':')[0];
+                  var minutes = task.startTime.toString().split(':')[1];
+                  debugPrint(' Hour : $hour');
+                  debugPrint(' Minutes : $minutes');
+                  var date = DateFormat.jm().parse(task.startTime!);
+                  var myTime = DateFormat('HH:mm').format(date);
+
+                  notifyHelper.scheduledNotification(
+                      int.parse(myTime.toString().split(':')[0]),
+                      int.parse(myTime.toString().split(':')[1]),
+                      task);
+                  return AnimationConfiguration.staggeredList(
+                    position: index,
+                    duration: const Duration(milliseconds: 2000),
+                    child: SlideAnimation(
+                      horizontalOffset: 300,
+                      child: FadeInAnimation(
+                        child: GestureDetector(
+                          onTap: () {
+                            _showBottomSheet(context, task);
+                          },
+                          child: TaskTile(task),
+                        ),
                       ),
                     ),
-                  ),
-                );
+                  );
+                } else {
+                  return const SizedBox();
+                }
               }),
         );
       }
@@ -271,6 +298,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  //
   _showBottomSheet(BuildContext context, Task task) {
     Get.bottomSheet(SingleChildScrollView(
       child: Container(
@@ -302,6 +330,9 @@ class _HomePageState extends State<HomePage> {
                   : _buildBottomSheet(
                       label: 'Görev Bitti',
                       onTap: () {
+                        _taskController.markTaskCompleted(task.id!);
+
+                        notifyHelper.cancelNotification(task);
                         Get.back();
                       },
                       clr: primaryClr),
@@ -309,6 +340,8 @@ class _HomePageState extends State<HomePage> {
               _buildBottomSheet(
                   label: 'Görevi sil',
                   onTap: () {
+                    _taskController.deleteTask(task);
+                    notifyHelper.cancelNotification(task);
                     Get.back();
                   },
                   clr: primaryClr),

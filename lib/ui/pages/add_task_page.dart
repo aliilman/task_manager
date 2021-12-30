@@ -55,6 +55,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 controller: _noteController,
               ),
               InputField(
+                onTap: _getDateFromUser,
                 title: 'Date',
                 hint: DateFormat.yMd().format(_selectedDate),
                 widget: IconButton(
@@ -75,6 +76,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         getTimeFormUser(isStartedTime: true);
                       },
                       child: InputField(
+                        onTap: () => getTimeFormUser(isStartedTime: true),
                         title: 'Start Time',
                         hint: _startTime,
                         widget: IconButton(
@@ -96,6 +98,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         getTimeFormUser(isStartedTime: false);
                       },
                       child: InputField(
+                        onTap: () => getTimeFormUser(isStartedTime: false),
                         title: 'End Time',
                         hint: _endTime,
                         widget: IconButton(
@@ -112,6 +115,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   ),
                 ],
               ),
+              //
               InputField(
                   title: 'Remind',
                   hint: '$_selectedRemind minutes early',
@@ -196,6 +200,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 
+  /// Görev detaylarını kontrol etmek için
   _validateDate() {
     if (_titleController!.text.isNotEmpty && _noteController!.text.isNotEmpty) {
       _addTasksToDb();

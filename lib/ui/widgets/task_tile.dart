@@ -61,12 +61,15 @@ class TaskTile extends StatelessWidget {
                             )),
                       ],
                     ),
+                    const SizedBox(
+                      height: 5,
+                    ),
                     Text(
                       task.note!,
                       style: GoogleFonts.lato(
                         textStyle: TextStyle(
                           color: Colors.grey[100]!,
-                          fontSize: 15,
+                          fontSize: 17,
                           fontWeight: FontWeight.w400,
                         ),
                       ),

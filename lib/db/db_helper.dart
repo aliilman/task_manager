@@ -9,15 +9,10 @@ class DBHelper {
   static const int _version = 1;
   static const String _tableName = 'tasks';
 
-  Future<Database> get database async {
+  static initDB() async {
     if (_db != null) {
       return _db!;
     }
-    _db = await initDB();
-    return _db!;
-  }
-
-  static initDB() async {
     try {
       String _path = join(await getDatabasesPath(), 'tasks.db');
       _db = await openDatabase(_path, version: _version,
