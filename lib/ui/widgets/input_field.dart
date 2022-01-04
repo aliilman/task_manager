@@ -50,7 +50,8 @@ class InputField extends StatelessWidget {
                   onTap: onTap,
                   controller: controller,
                   readOnly: widget != null ? true : false,
-                  style: subHeadingStyle,
+                  style:
+                      subHeadingStyle.copyWith(fontWeight: FontWeight.normal),
                   cursorColor:
                       Get.isDarkMode ? Colors.grey[100] : Colors.grey[700],
                   decoration: InputDecoration(

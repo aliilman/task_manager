@@ -163,12 +163,14 @@ class _HomePageState extends State<HomePage> {
                   var minutes = task.startTime.toString().split(':')[1];
                   debugPrint(' Hour : $hour');
                   debugPrint(' Minutes : $minutes');
-                  var date = DateFormat.jm().parse(task.startTime!);
-                  var myTime = DateFormat('HH:mm').format(date);
+                  // var date = DateFormat.jm().parse(task.startTime!);
+                  // var myTime = DateFormat('HH:mm').format(date);
 
                   notifyHelper.scheduledNotification(
-                      int.parse(myTime.toString().split(':')[0]),
-                      int.parse(myTime.toString().split(':')[1]),
+                      int.parse(hour),
+                      int.parse(minutes),
+                      // int.parse(myTime.toString().split(':')[0]),
+                      // int.parse(myTime.toString().split(':')[1]),
                       task);
                   return AnimationConfiguration.staggeredList(
                     position: index,
@@ -327,31 +329,37 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 20),
               task.isCompleted == 1
                   ? Container()
-                  : _buildBottomSheet(
-                      label: 'Görev Bitti',
-                      onTap: () {
-                        _taskController.markTaskCompleted(task.id!);
+                  : Expanded(
+                      child: _buildBottomSheet(
+                          label: 'Görev Bitti',
+                          onTap: () {
+                            _taskController.markTaskCompleted(task.id!);
 
-                        notifyHelper.cancelNotification(task);
-                        Get.back();
-                      },
-                      clr: primaryClr),
+                            notifyHelper.cancelNotification(task);
+                            Get.back();
+                          },
+                          clr: primaryClr),
+                    ),
               Divider(color: Get.isDarkMode ? Colors.grey : darkGreyClr),
-              _buildBottomSheet(
-                  label: 'Görevi sil',
-                  onTap: () {
-                    _taskController.deleteTask(task);
-                    notifyHelper.cancelNotification(task);
-                    Get.back();
-                  },
-                  clr: primaryClr),
+              Expanded(
+                child: _buildBottomSheet(
+                    label: 'Görevi sil',
+                    onTap: () {
+                      _taskController.deleteTask(task);
+                      notifyHelper.cancelNotification(task);
+                      Get.back();
+                    },
+                    clr: primaryClr),
+              ),
               Divider(color: Get.isDarkMode ? Colors.grey : darkGreyClr),
-              _buildBottomSheet(
-                  label: 'İptal et',
-                  onTap: () {
-                    Get.back();
-                  },
-                  clr: primaryClr),
+              Expanded(
+                child: _buildBottomSheet(
+                    label: 'Iptal et',
+                    onTap: () {
+                      Get.back();
+                    },
+                    clr: primaryClr),
+              ),
               const SizedBox(height: 20),
             ],
           )),

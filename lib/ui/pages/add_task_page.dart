@@ -150,7 +150,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     items: repeatList.map((value) {
                       return DropdownMenuItem(
                         value: value,
-                        child: Text('$value'),
+                        child: Text(value),
                       );
                     }).toList(),
                     underline: const SizedBox(height: 0),
