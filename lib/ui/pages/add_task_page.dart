@@ -46,12 +46,12 @@ class _AddTaskPageState extends State<AddTaskPage> {
               Text('Add Task', style: headingStyle),
               InputField(
                 title: 'Title',
-                hint: 'Entre title here',
+                hint: 'Enter title here',
                 controller: _titleController,
               ),
               InputField(
                 title: 'Note',
-                hint: 'Entre Note here',
+                hint: 'Enter Note here',
                 controller: _noteController,
               ),
               InputField(

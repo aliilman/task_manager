@@ -331,7 +331,7 @@ class _HomePageState extends State<HomePage> {
                   ? Container()
                   : Expanded(
                       child: _buildBottomSheet(
-                          label: 'Görev Bitti',
+                          label: 'Task completed',
                           onTap: () {
                             _taskController.markTaskCompleted(task.id!);
 
@@ -343,7 +343,7 @@ class _HomePageState extends State<HomePage> {
               Divider(color: Get.isDarkMode ? Colors.grey : darkGreyClr),
               Expanded(
                 child: _buildBottomSheet(
-                    label: 'Görevi sil',
+                    label: 'Delete',
                     onTap: () {
                       _taskController.deleteTask(task);
                       notifyHelper.cancelNotification(task);
@@ -354,7 +354,7 @@ class _HomePageState extends State<HomePage> {
               Divider(color: Get.isDarkMode ? Colors.grey : darkGreyClr),
               Expanded(
                 child: _buildBottomSheet(
-                    label: 'Iptal et',
+                    label: 'Cancel',
                     onTap: () {
                       Get.back();
                     },

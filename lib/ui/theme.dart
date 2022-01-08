@@ -40,7 +40,7 @@ TextStyle get subHeadingStyle {
     textStyle: TextStyle(
       color: Get.isDarkMode ? Colors.white : Colors.black,
       fontSize: 20,
-      fontWeight: FontWeight.bold,
+      fontWeight: FontWeight.normal,
     ),
   );
 }
