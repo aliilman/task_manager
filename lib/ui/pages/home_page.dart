@@ -244,8 +244,8 @@ class _HomePageState extends State<HomePage> {
       leading: IconButton(
         onPressed: () {
           ThemeServices().switchTheme();
-          NotifyHelper()
-              .displayNotification(title: 'Theme changed', body: 'Test');
+          //  NotifyHelper()
+          //  .displayNotification(title: 'Theme changed', body: 'Test');
           //  notifyHelper.scheduledNotification(hour, minutes, task)
         },
         icon: Icon(
