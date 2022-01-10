@@ -6,6 +6,7 @@ import 'package:task_manager/ui/size_config.dart';
 
 import '../theme.dart';
 
+// Custom widget oluşturduk
 class TaskTile extends StatelessWidget {
   final Task task;
   const TaskTile(this.task, {Key? key}) : super(key: key);

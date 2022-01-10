@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+// bu class ekranın büyütü tutuyor
+// UI'a responsiveness sağlamak için bu klasörü kalandık
 class SizeConfig {
   static late MediaQueryData _mediaQueryData;
   static late double screenWidth;

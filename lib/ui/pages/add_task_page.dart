@@ -220,6 +220,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     }
   }
 
+// Görevi veritabana ekleme metodu
   _addTasksToDb() async {
     int value = await _taskController.addTask(
         task: Task(
@@ -274,6 +275,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 
+// tarih seçici
   _getDateFromUser() async {
     DateTime? _pickedDate = await showDatePicker(
         context: context,
@@ -290,6 +292,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     }
   }
 
+// saat seçici
   getTimeFormUser({required bool isStartedTime}) async {
     TimeOfDay? _pickedTime = await showTimePicker(
         context: context,

@@ -45,19 +45,17 @@ class _HomePageState extends State<HomePage> {
     SizeConfig().init(context);
     return Scaffold(
       appBar: _appBar(),
-      body: Container(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            _addTaskBar(),
-            const SizedBox(
-              height: 11,
-            ),
-            _addDateBar(),
-            const SizedBox(height: 6),
-            _showTasks(),
-          ],
-        ),
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          _addTaskBar(),
+          const SizedBox(
+            height: 11,
+          ),
+          _addDateBar(),
+          const SizedBox(height: 6),
+          _showTasks(),
+        ],
       ),
     );
   }
@@ -163,14 +161,14 @@ class _HomePageState extends State<HomePage> {
                   var minutes = task.startTime.toString().split(':')[1];
                   debugPrint(' Hour : $hour');
                   debugPrint(' Minutes : $minutes');
-                  // var date = DateFormat.jm().parse(task.startTime!);
-                  // var myTime = DateFormat('HH:mm').format(date);
+                  var date = DateFormat.jm().parse(task.startTime!);
+                  var myTime = DateFormat('HH:mm').format(date);
 
                   notifyHelper.scheduledNotification(
-                      int.parse(hour),
-                      int.parse(minutes),
-                      // int.parse(myTime.toString().split(':')[0]),
-                      // int.parse(myTime.toString().split(':')[1]),
+                      //int.parse(hour),
+                      //int.parse(minutes),
+                      int.parse(myTime.toString().split(':')[0]),
+                      int.parse(myTime.toString().split(':')[1]),
                       task);
                   return AnimationConfiguration.staggeredList(
                     position: index,

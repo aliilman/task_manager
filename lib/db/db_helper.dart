@@ -9,6 +9,7 @@ class DBHelper {
   static const int _version = 1;
   static const String _tableName = 'tasks';
 
+// veritabanının başlatılması
   static initDB() async {
     if (_db != null) {
       return _db!;
@@ -38,22 +39,26 @@ class DBHelper {
     }
   }
 
+  // veri tabanına task ekleme metodu
   static Future<int> insert(Task? task) async {
     debugPrint('insert function called');
     return await _db!.insert(_tableName, task!.toJson());
   }
 
+  //  task'ı silme metodu
   static Future<int> delete(Task task) async {
     debugPrint('delete function called');
     return await _db!.delete(_tableName, where: 'id= ?', whereArgs: [task.id]);
   }
 
+  // veri tabanıdaki taskları listeleme metodu
   static Future<List<Map<String, dynamic>>> query() async {
     debugPrint('query function called');
 
     return await _db!.query(_tableName);
   }
 
+// task'ı güncelemeyi sağlayan metod
   static Future<int> update(int id) async {
     debugPrint('update function called');
     return await _db!.rawUpdate('''

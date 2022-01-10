@@ -10,7 +10,7 @@ class ThemeServices {
   _saveThemeToBox(bool isDarkMode) => _box.write(_key, isDarkMode);
 
   ThemeMode get theme => _loadThemeFromBox() ? ThemeMode.dark : ThemeMode.light;
-
+//Theme değiştirmek için bu fonksiyonu kullanıllır
   void switchTheme() {
     Get.changeThemeMode(_loadThemeFromBox() ? ThemeMode.light : ThemeMode.dark);
     _saveThemeToBox(!_loadThemeFromBox());

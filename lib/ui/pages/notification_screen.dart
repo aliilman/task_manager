@@ -118,7 +118,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         const SizedBox(width: 20),
         Text(
           title,
-          style: TextStyle(color: Colors.white, fontSize: 30),
+          style: const TextStyle(color: Colors.white, fontSize: 30),
         ),
       ],
     );
